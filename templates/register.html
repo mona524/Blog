@@ -1,0 +1,86 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎注册</title>
+    <script src="{% static 'jquery-3.2.1.js' %}"></script>
+    <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/mystyle.css' %}" rel="stylesheet">
+
+</head>
+<body>
+<div class="container register_container">
+    <div class="row">
+        <div class="col-sm-5 col-sm-offset-1">
+            <form>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">请输入用户名</label>
+                    <span class="user_error"></span>
+                    {{ form_obj.username }}
+
+                </div>
+
+                 <div class="form-group register_avatar">
+                     <label for="avatar">请选择头像</label>
+                     <img src="{% static  'imag/q.png' %}" class="register_avatar_img">
+                     <input type="file" class="register_avatar_input" id="avatar" name="avatar">
+
+
+                </div>
+
+                <div class="form-group">
+                    <label for="password">请输入密码</label>
+                    <span class="password_error"></span>
+                    {{ form_obj.password }}
+
+                </div>
+
+                <div class="form-group">
+                    <label for="re_password">请再次输入密码</label>
+                    <span class="re_password_error"></span>
+                    {{ form_obj.re_password }}
+
+                </div>
+
+                <div class="form-group">
+                    <label for="email">请输入邮箱</label>
+                     <span class="email_error"></span>
+                    {{ form_obj.email }}
+
+                </div>
+
+                 <div class="form-group">
+                     <label for="id_valid_code">验证码</label>
+                     <span class="valid_code_error"></span>
+                     <div class="row">
+                         <div class="col-sm-6">
+
+                             {{ form_obj.valid_code }}
+
+                         </div>
+                         <div class="col-sm-6">
+                             <img src="/valid_code/" alt="" class="valid_img">
+                             <a class="img_refresh">刷新</a>
+                         </div>
+                     </div>
+                </div>
+
+                <button type="button" class="btn btn-default register_button">提交</button>
+            </form>
+        </div>
+
+        <div class="col-sm-3 col-sm-offset-1">
+            <img src="{% static 'imag/iamg_register.png' %}" alt="" >
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/myaction.js' %}"></script>
+</body>
+
+</html>

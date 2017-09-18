@@ -1,0 +1,209 @@
+{% load staticfiles %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog</title>
+    <script src="{% static 'jquery-3.2.1.js' %}"></script>
+    <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/mystyle.css' %}" rel="stylesheet">
+
+</head>
+<body>
+
+{#----------------------navbar start here----------------------#}
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+
+{##}
+{#                {% if current_funs_id == 0 %}#}
+{#                   <li class="active"><a href="#">ALL <span class="sr-only">(current)</span></a></li>#}
+{#                {% else %}#}
+{#                    <li><a href="/blog/0">ALL <span class="sr-only">(current)</span></a></li>#}
+{#                {% endif %}#}
+
+                    {% for fun in func %}
+                        {% if current_funs_id == fun.0 %}
+                            <li class="active"><a href="blog/{{ fun.0 }}">{{ fun.1 }}</a></li>
+                        {% else %}
+                            <li><a href="blog/{{ fun.0 }}">{{ fun.1 }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+            </ul>
+        
+            <ul class="nav navbar-nav navbar-right">
+
+                {% if user.is_authenticated %}
+                    <li class="index_welcome">欢迎登录 {{ user }}</li>
+                    <li><a href="/set_password/">修改密码</a></li>
+                    <li><a href="/logout/">退出</a></li>
+                {% else %}
+                    <li><a href="/login/">登录</a></li>
+                    <li><a href="/register/">注册</a></li>
+                {% endif %}
+
+
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+{#----------------------navbar end here------------------------#}
+
+
+<div class="container">
+
+    <div class="row">
+
+         {#----------------------left content start here------------------#}
+            <div class="col-sm-3 left_menu">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">分类</h3>
+                    </div>
+                    <div class="panel-body left_menu_p">
+                        {% for type_choice in type_choices %}
+                            <p><a>{{ type_choice.1 }}</a></p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+         {#----------------------left content end here------------------#}
+
+        {#----------------------middle content start here------------------#}
+        <div class="col-sm-6">
+            <div class="article_list ">
+
+                 {#----------------------article start here------------------------#}
+
+                {% for article in article_list %}
+                    <div class="article_item">
+                        <div class="row">
+                            <a href="blog/{{ article.blog.user.username }}/articles_index/{{ article.nid }}"><div class="title">{{ article.title }}</div></a>
+                        </div>
+                        <div class="row">
+                            <div class="img">
+                                <a href="/blog/{{ article.blog.user.username }}"><img src=" {{ article.blog.user.avatar.url }}" alt=""></a>
+                            </div>
+
+                            <div class="article_content">{{ article.desc }}</div>
+                        </div>
+                        <div class="row">
+                            <a href="/blog/{{ article.blog.user.username }}"><span>{{ article.blog.user.username }}</span></a>
+                            <span> 发布于 </span>
+                            <span>{{ article.create_time |date:'Y-m-d h:m' }}</span> &nbsp;&nbsp;
+                            <span class="glyphicon glyphicon-comment"><a href="">评论({{ article.comment_count }})</a></span>&nbsp;&nbsp;
+                            <span class="glyphicon glyphicon-thumbs-up"><a href="">赞({{ article.up_count }})</a></span>
+
+                        </div>
+
+                    </div>
+                {% endfor %}
+
+                {#----------------------article end here------------------------#}
+
+               {#----------------------page start here------------------------#}
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-6 my_page">
+                        <nav aria-label="Page navigation ">
+                            <ul class="pagination">
+                                {% block page %}
+                                    {% if articles.has_previous %}
+                                        <li><a href="/?page={{ articles.previous_page_number }}">上一页</a></li>
+                                    {% else %}
+                                        <li><a href="#" class="disabled">上一页</a></li>
+                                    {% endif %}
+
+                                    {% for page_num in articles.page_range %}
+                                        <li><a href="/?page={{ page_num }}">{{ page_num }}</a></li>
+                                    {% endfor %}
+
+                                    {% if articles.has_next %}
+                                        <li><a href="/?page={{ articles.next_page_number }}">下一页</a></li>
+                                    {% else %}
+                                        <li><a href="#" class="disabled">下一页</a></li>
+                                    {% endif %}
+
+                                {% endblock %}
+
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                {#----------------------page end here--------------------------#}
+
+            </div>
+
+        </div>
+        {#----------------------middle content end here--------------------#}
+
+
+
+        {#----------------------right panel start here--------------------#}
+         <div class="col-sm-3">
+             <div class="panel panel-default">
+                 <div class="panel-heading">
+                     <h3 class="panel-title">Panel title</h3>
+                 </div>
+                 <div class="panel-body">
+                     <p>Panel content</p>
+                     <p>Panel content</p>
+                     <p>Panel content</p>
+                     <p>Panel content</p>
+                 </div>
+             </div>
+             <div class="panel panel-warning">
+                 <div class="panel-heading">
+                     <h3 class="panel-title">Panel title</h3>
+                 </div>
+                 <div class="panel-body">
+                     <p>Panel content</p>
+                     <p>Panel content</p>
+                     <p>Panel content</p>
+                     <p>Panel content</p>
+
+                 </div>
+             </div>
+             <div class="panel panel-info">
+                 <div class="panel-heading">
+                     <h3 class="panel-title">Panel title</h3>
+                 </div>
+                 <div class="panel-body">
+                     <p>Panel content</p>
+                     <p>Panel content</p>
+                     <p>Panel content</p>
+                     <p>Panel content</p>
+                 </div>
+             </div>
+
+
+        </div>
+        {#--------------right panel end here------------------------------#}
+
+    </div>
+
+</div>
+
+
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+
+
+</html>

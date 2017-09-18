@@ -1,0 +1,260 @@
+
+*{padding: 0;
+margin: 0}
+/***************************************************************************/
+/*for index html
+*/
+a{text-decoration: none}
+
+.article_item{margin-top: 20px;
+            padding-bottom: 10px;
+            border-bottom: solid 1px lightgray}
+
+.title{font-size: 18px ;  }
+
+.index_welcome{line-height:50px;
+                text-align: center;
+                color: #9d9d9d}
+
+
+.left_menu{margin-left: -30px;
+           }
+
+.left_menu h3{text-align: center}
+.left_menu_p p{border-bottom: solid 1px #337ab7;
+            padding-bottom: 10px;
+            text-align: center}
+
+.left_menu_p{ background-color: #d9edf7}
+
+
+/******************************************************************************/
+/*for login html*/
+
+.img{float: left;
+        width: 60px;
+        height: 60px}
+
+.img img{width: 60px;
+        height: 60px}
+
+.login_container{margin-top: 80px}
+
+.login_error_message{color: red}
+
+
+
+/******************************************************************************/
+/*for register html*/
+
+.register_container{
+    margin-top: 40px;
+}
+
+.re_password_error,.user_error,.email_error,.password_error,.re_password_error,.valid_code_error
+{color: red;
+margin-left: 50px}
+
+
+/*调input输入框和img标签的位置，保证两者完全重合*/
+.register_avatar{position: relative;
+                width: 80px;
+                height: 80px}
+
+.register_avatar_img,.register_avatar_input{position: absolute;
+                                        left: 80px;
+                                        top: 0;
+                                        width: 80px;
+                                        height: 80px}
+/*设置透明度，只显示图片。如果设置display=none的话，物理位置会消失，不能点击上传图片*/
+.register_avatar_input{opacity: 0}
+
+
+/**************************user.html ***************************************************************/
+
+.user_avartar_img{
+    width: 80px;
+    height: 80px;
+}
+
+
+/**日历控件样式开始**/
+#calendar {
+    width: 195px;
+}
+
+    #calendar .Cal {
+        width: 100%;
+        line-height: 1.5em;
+    }
+
+.Cal { /**日历容器table**/
+    border: none;
+    color: #666;
+}
+
+#calendar table a:link, #calendar table a:visited, #calendar table a:active {
+    font-weight: bold;
+}
+
+
+.CalTodayDay { /**今天日期样式**/
+    color: #f60;
+}
+
+#calendar .CalNextPrev a:link, #calendar .CalNextPrev a:visited, #calendar .CalNextPrev a:active { /**上个月、下个月箭头样式**/
+    font-weight: bold;
+    background-color: white;
+}
+
+.CalDayHeader {
+    border-bottom: 1px solid #ccc;
+}
+
+.CalTitle { /**日历年月头部样式**/
+    width: 100%;
+    background: white;
+    color: black;
+    border-bottom: 1px solid #666;
+}
+/**日历控件样式结束**/
+.catListTitle {
+    font-weight: bold;
+    line-height: 1.5em;
+    font-size: 16px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    margin-left: 1em;
+    color: #5a5a5a;}
+
+#calendar td{margin-left: 10px!important;}
+
+
+
+/**************************user article.html ***************************************************************/
+
+.article_comment{padding-left: 50px;
+                margin-top: 50px}
+
+.article_bottom{background-color: lightgray;
+                width: 100%;
+                height: 20px;
+                line-height: 20px;
+                text-align: center;
+                color: lightsteelblue;
+                margin-top: 50px;
+                }
+
+/**************************user manage.html ***************************************************************/
+
+
+.menu{
+    width: 140px;
+    height: 30px;
+    background-color: #101010;
+    color: #9d9d9d;
+    line-height: 30px;
+    text-align: center;
+    margin-left: -19px;
+}
+
+.menu a{
+     color: #9d9d9d;
+    text-decoration: none;
+}
+
+.menu a:hover{
+    color:#fff ;
+    text-decoration: none;
+    background-color: transparent
+    !important;
+}
+
+anel{margin-top: -50px}
+
+
+.my_panel_heading{
+    line-height: 30px;
+}
+
+.my_main{font-size: 14px;
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        margin-top: 21px;
+  }
+
+.my_page{margin-right: -20px}
+
+
+.welcome{
+    line-height: 50px;
+    text-align: center;
+    color: #9d9d9d;
+}
+
+
+.hide{display: none}
+
+.add{position: fixed;
+    top: 50%;
+    bottom: 50%;
+    left:50%;
+    right: 50%;
+    margin-left: -150px;
+    margin-top: -150px;
+    height: 300px;
+    width: 300px;
+    background-color: lavender;
+    }
+
+.add div{margin-top: 7px}
+
+.add input{display: inline-block;
+            margin-left: 7px;
+            }
+
+#search_inp{margin-left: 20px;
+            margin-top: 20px}
+
+.search_btn{
+    margin-top: 20px;
+}
+
+
+/**************************user add article html ***************************************************************/
+
+.add_container{padding-left: -30px;
+                margin-left: 0}
+
+.my_main{margin-top: -2px}
+
+.add_title{width: 650px;
+            height: 30px;
+            margin-bottom: 10px}
+
+.add_desc{
+    width: 650px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+#add_submit{margin-top: 10px; }
+
+.add_h3{padding-left: 200px}
+
+.category_sel,.tag_sel,.type_sel{margin-top: 10px;
+                        padding-right: 20px}
+.category_sel select{width: 100px;
+                    height: 30px; }
+
+.tag_sel select{width: 100px;
+        height: auto}
+
+.category_sel option,.tag_sel option{text-align: center}
+
+
+
+
+
+
+.content{margin-left: 20px}
+

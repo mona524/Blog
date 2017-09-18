@@ -1,0 +1,19 @@
+<li class="list-group-item">
+    <p>
+        <span>#第{{ count }}楼 </span>
+        <span>{{ comment_object.user }}</span>
+        <span> {{ comment_object.create_time|date:'Y-m-d h:m' }}</span>
+    </p>
+    {% if comment_object.parent_id %}
+        <p>
+            <span>@{{ comment_object.parent_id.user.username }}</span>
+            <span>{{ comment_object.parent_id.conten|safe }}</span>
+        </p>
+    {% endif %}
+
+    {{ comment_object.content|safe}}
+    <a class="pull-right">支持&nbsp;</a>
+    <a class="pull-right reply_comment">回复&nbsp;</a>
+    <span class="{{ comment_object.nid }}"></span>
+</li>
+

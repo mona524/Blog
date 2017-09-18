@@ -1,0 +1,298 @@
+{% load staticfiles %}
+{% load tag_replace %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }}Blog</title>
+    <script src="{% static 'jquery-3.2.1.js' %}"></script>
+    <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/mystyle.css' %}" rel="stylesheet">
+    <script src="{% static 'kindeditor_a5/kindeditor-4.1.10/kindeditor-all.js' %}"></script>
+
+</head>
+<body>
+
+
+
+{#----------------------navbar start here----------------------#}
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+
+                    {% for fun in func %}
+                        {% if current_funs_id == fun.0 %}
+                            <li class="active"><a href="blog/{{ fun.0 }}">{{ fun.1 }}</a></li>
+                        {% else %}
+                            <li><a href="blog/{{ fun.0 }}">{{ fun.1 }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    <li><a href="/blog/user_manager/">管理</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+
+                {% if user.is_authenticated %}
+                    <li class="index_welcome">欢迎登录 {{ user }}</li>
+                    <li><a href="/set_password/">修改密码</a></li>
+                    <li><a href="/logout/">退出</a></li>
+                {% else %}
+                    <li><a href="/login/">登录</a></li>
+                    <li><a href="/register/">注册</a></li>
+                {% endif %}
+
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+{#----------------------navbar end here------------------------#}
+
+
+
+
+
+<div class="container">
+    <div class="row">
+
+         {#----------------------left content start here------------------#}
+            <div class="col-sm-3 left_menu">
+
+                <div id="calendar" class="panel">
+                <div id="blog-calendar" style="">
+                    <table id="blogCalendar" class="Cal" cellspacing="" cellpadding="0" title="Calendar">
+                        <tbody>
+                        <tr>
+                            <td colspan="7">
+                                <table class="CalTitle" cellspacing="" >
+                                    <tbody>
+                                    <tr>
+                                        <td class="CalNextPrev"><a href="javascript:void(0);"
+                                                                   onclick="loadBlogCalendar('2017/08/01');return false;">&lt;</a>
+                                        </td>
+                                        <td align="center">2017年9月</td>
+                                        <td class="CalNextPrev" align="right"><a href="javascript:void(0);"
+                                                                                 onclick="loadBlogCalendar('2017/10/01');return false;">&gt;</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="CalDayHeader" align="center" abbr="日" scope="col">日</th>
+                            <th class="CalDayHeader" align="center" abbr="一" scope="col">一</th>
+                            <th class="CalDayHeader" align="center" abbr="二" scope="col">二</th>
+                            <th class="CalDayHeader" align="center" abbr="三" scope="col">三</th>
+                            <th class="CalDayHeader" align="center" abbr="四" scope="col">四</th>
+                            <th class="CalDayHeader" align="center" abbr="五" scope="col">五</th>
+                            <th class="CalDayHeader" align="center" abbr="六" scope="col">六</th>
+                        </tr>
+                        <tr>
+                            <td class="CalOtherMonthDay" align="center">27</td>
+                            <td class="CalOtherMonthDay" align="center">28</td>
+                            <td class="CalOtherMonthDay" align="center">29</td>
+                            <td class="CalOtherMonthDay" align="center">30</td>
+                            <td class="CalOtherMonthDay" align="center">31</td>
+                            <td align="center">1</td>
+                            <td class="CalWeekendDay" align="center">2</td>
+                        </tr>
+                        <tr>
+                            <td class="CalWeekendDay" align="center">3</td>
+                            <td align="center">4</td>
+                            <td align="center">5</td>
+                            <td align="center">6</td>
+                            <td align="center">7</td>
+                            <td align="center">8</td>
+                            <td class="" align="center">9</td>
+                        </tr>
+                        <tr>
+                            <td class="CalWeekendDay" align="center">10</td>
+                            <td align="center">11</td>
+                            <td align="center">12</td>
+                            <td align="center">13</td>
+                            <td align="center">14</td>
+                            <td align="center">15</td>
+                            <td class="CalWeekendDay" align="center">16</td>
+                        </tr>
+                        <tr>
+                            <td class="CalWeekendDay" align="center">17</td>
+                            <td align="center">18</td>
+                            <td align="center">19</td>
+                            <td align="center">20</td>
+                            <td align="center">21</td>
+                            <td align="center">22</td>
+                            <td class="CalWeekendDay" align="center">23</td>
+                        </tr>
+                        <tr>
+                            <td class="CalWeekendDay" align="center">24</td>
+                            <td align="center">25</td>
+                            <td align="center">26</td>
+                            <td align="center">27</td>
+                            <td align="center">28</td>
+                            <td align="center">29</td>
+                            <td class="CalWeekendDay" align="center">30</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+{#                    <script type="text/javascript">loadBlogDefaultCalendar();</script>#}
+
+            </div>
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">博主个人信息</h3>
+                    </div>
+
+                    <div class="panel-body left_menu_p">
+
+                        <p> 博主：{{ user.username }}</p>
+                        <p> 园龄：{{ user_entry_time.0 }}天{{ user_entry_time.1 }}小时</p>
+                        <p> 粉丝数：{{ fan_count }}</p>
+                        <p> 博主邮箱:{{ user.email }}</p>
+                        <p><img src="{{ user.avatar.url }}" alt="" class="user_avartar_img"></p>
+
+                    </div>
+                </div>
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">分类信息</h3>
+                    </div>
+
+                    <div class="panel-body left_menu_p">
+                        {% for category in category_count_list %}
+                            <p><a href="/blog/{{ user.username }}/articles/category/{{ category.1 }}">{{ category.0 }}&nbsp;</a>({{ category.2 }})</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">标签信息</h3>
+                    </div>
+
+                    <div class="panel-body left_menu_p">
+                        {% for tag in tag_count_list %}
+                            <p><a href="/blog/{{ user.username }}/articles/tags/{{ tag.1 }}"> {{ tag.0 }} </a>&nbsp;({{ tag.2 }})</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">时间分类</h3>
+                    </div>
+
+                    <div class="panel-body left_menu_p">
+{#                        {{   data_count_list.0 }}#}
+{#                    {{ getsomething }}#}
+{#                        {{ data_count_list }}#}
+                        {% for d in  data_count_list %}
+                            <p><a href="/blog/{{ user.username }}/articles/date/{{ d.0 }}">{{ d.0 }}</a> &nbsp;({{ d.1 }})</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+
+            </div>
+         {#----------------------left content start here------------------#}
+
+
+
+        {#----------------------middle content start here------------------#}
+        <div class="col-sm-9">
+
+            <div class="article_list">
+                {% block article %}
+                 {#----------------------article start here------------------------#}
+                    {% for article in article_list %}
+                        <div class="article_item">
+                            <div class="row">
+                                <a href="/blog/{{ user.username }}/articles/{{ article.nid }}">
+                                    <div class="title">{{ article.title }}</div>
+                                </a>
+                            </div>
+                            <div class="row">
+                                <div class="article_content">{{ article.desc }}</div>
+                            </div>
+                            <div class="row article_hr">
+                                <span>{{ article.blog.user.username }}</span>
+                                <span> 发布于 </span>
+                                <span>{{ article.create_time|date:'Y-m-d h:m' }}</span> &nbsp;&nbsp;
+                                <span class="glyphicon glyphicon-comment"><a
+                                        href="">评论({{ article.comment_count }})</a></span>&nbsp;&nbsp;
+                                <span class="glyphicon glyphicon-thumbs-up"><a href="">赞({{ article.up_count }})</a></span>
+                            </div>
+                        </div>
+                {% endfor %}
+                {% endblock %}
+
+            </div>
+        </div>
+
+                {#----------------------article end here------------------------#}
+
+               {#----------------------page start here------------------------#}
+{#                <div class="row">#}
+{#                    <div class="col-md-6 col-md-offset-6 my_page">#}
+{#                        <nav aria-label="Page navigation ">#}
+{#                            <ul class="pagination">#}
+{#                                {% block page %}#}
+{#                                    {% if articles.has_previous %}#}
+{#                                        <li><a href="/?page={{ articles.previous_page_number }}">上一页</a></li>#}
+{#                                    {% else %}#}
+{#                                        <li><a href="#" class="disabled">上一页</a></li>#}
+{#                                    {% endif %}#}
+{##}
+{#                                    {% for page_num in articles.page_range %}#}
+{#                                        <li><a href="/?page={{ page_num }}">{{ page_num }}</a></li>#}
+{#                                    {% endfor %}#}
+{##}
+{#                                    {% if articles.has_next %}#}
+{#                                        <li><a href="/?page={{ articles.next_page_number }}">下一页</a></li>#}
+{#                                    {% else %}#}
+{#                                        <li><a href="#" class="disabled">下一页</a></li>#}
+{#                                    {% endif %}#}
+{##}
+{#                                {% endblock %}#}
+{##}
+{#                            </ul>#}
+{#                        </nav>#}
+{#                    </div>#}
+{#                </div>#}
+                {#----------------------page end here--------------------------#}
+
+
+        {#----------------------middle content end here--------------------#}
+
+    </div>
+</div>
+
+
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/myaction.js' %}"></script>
+{% block js %}
+{% endblock %}
+
+</body>
+
+
+</html>

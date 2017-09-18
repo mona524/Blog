@@ -1,0 +1,152 @@
+{% extends 'user_manage.html' %}
+
+{% block content %}
+    <div class="col-sm-6 col-sm-offset-1">
+        <h3 class="add_h3">
+            添加文章
+        </h3>
+        <div class="">
+            <form action="/blog/{{ user_obj.username }}/add_article/" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <p>标题</p>
+                    <input type="text" name="title" placeholder="title" class="add_title">
+                </div>
+                <div class="row">
+                    <p>文章摘要</p>
+                    <input type="text" name="desc" placeholder="摘要" class="add_desc">
+                </div>
+                <div class="row">
+                    <p>内容</p>
+                    <textarea rows="15" cols="100" id="add_content" name="content">
+                     </textarea>
+                </div>
+
+                 <div class="row type_sel">
+                    分区
+                    <select name="type" id="type">
+                        {% for type in type_list %}
+                            <option value="{{ type.0 }}">{{ type.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                <div class="row category_sel">
+                    分类
+                    <select name="category" id="category">
+                        {% for category in category_list %}
+                            <option value="{{ category.title }}">{{ category.title }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="button" value="添加" class="btn bg-info add_category_btn" >
+                </div>
+
+                <div class="row tag_sel">
+                    <span>标签</span>
+                    <select name="tag" id="tag" multiple="multiple">
+                        {% for tag in tag_list %}
+                            <option value="{{ tag.title }}">{{ tag.title }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="button" value="添加" class="btn bg-info add_tag_btn">
+                </div>
+
+                <div class="row"><input type="submit" name="" id="add_submit" value="提交" class="btn btn-success" ></div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        {% csrf_token %}
+                        <input type="text" name="category" style="{width: 160px;height: 40px}" id="category_tag_input">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="category_tag_save">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal  end-->
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        KindEditor.create('#add_content', {
+            width: '200px',
+            height: '400px',
+            resizeType: 0,
+            uploadJson: "/blog/{{ user_obj.username }}/upload_file/",
+            extraFileUploadParams: {
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            }
+        });
+
+
+        $('.add_category_btn').click(function () {
+            $('#myModalLabel').text('添加分类');
+            $('#myModal').modal('show')
+        });
+         $('.add_tag_btn').click(function () {
+                $('#myModalLabel').text('添加标签');
+                $('#myModal').modal('show')
+            });
+
+        $('#category_tag_save').click(function () {
+            var ajax_data={};
+
+            ajax_data['csrfmiddlewaretoken'] = $("[name='csrfmiddlewaretoken']").val();
+            if($('#myModalLabel').text()=='添加分类'){
+                ajax_data['category'] = $('#category_tag_input').val()
+            }
+            else {
+                ajax_data['tag'] = $('#category_tag_input').val()}
+            console.log(ajax_data);
+
+
+            $.ajax({
+                 url: "/blog/{{ user_obj.username }}/add_category_tag",
+                type: "POST",
+                data: ajax_data,
+
+                success:function (data) {
+                     data=JSON.parse(data);
+                    if(data['tag']){
+                        s = '<option value='+data["tag"]+'>'+data["tag"]+'</option>';
+                        $('#tag').append(s)
+                    }
+                    else {
+                        s = '<option value='+data["category"]+'>'+data["category"]+'</option>';
+                        $('#category').append(s)
+                    }
+
+                    $('#myModal').modal('hide')
+
+                }
+
+            })
+
+        });
+
+
+
+
+
+    </script>
+{% endblock %}

@@ -1,0 +1,187 @@
+
+{% extends 'user.html' %}
+
+{% block  article%}
+    <h3>{{ article.title }}</h3>
+
+    {{ article_content|safe }}
+
+    <div class="row article_comment">
+        <hr>
+        <div class="row">
+            <div class="row ">
+                分类 <button class=" btn btn-success">{{ article.category.title }}</button>
+                &nbsp;&nbsp;
+                 <span>
+                        评论
+                </span> <a><span class="glyphicon glyphicon-comment"></span></a>
+
+                <span>({{ article.comment_count }})</span>
+
+                 &nbsp;&nbsp;
+
+                <span>
+                        赞一个
+                </span> <a class="article_up"><span class="glyphicon glyphicon-thumbs-up"></span></a>({{ article.up_count }})
+                <span class="up_error"></span>
+                 &nbsp;&nbsp;
+                踩一下<a href=""><span class="glyphicon glyphicon-thumbs-down"></span></a>
+                        <span class="up_count" >({{ article.down_count }})</span>
+                   <div class="col-sm-6 col-sm-offset-6">
+                    posted @ {{ article.create_time|date:'Y-m-d h:m' }} {{ user.username }}
+                    阅读数{{ article.read_count }}
+                    评论{{ article.comment_count }}
+
+                </div>
+            </div>
+            <div class="row comment_dispaly">
+                <p>已有评论</p>
+                <ul class="list-group comment_content_list">
+                    {% for comment in comment_list %}
+
+                             <li class="list-group-item">
+                             <p>
+                                <span>#第{{ forloop.counter }}楼  </span>
+                                 <span>{{ comment.user }}</span>
+                                 <span>{{ comment.create_time|date:'Y-m-d h:m' }}</span>
+                             </p>
+                                 {% if comment.parent_id %}
+                                     <p>
+                                         <span>@{{ comment.parent_id.user.username }}</span>
+                                         <span>{{ comment.parent_id.content|safe }}</span>
+                                     </p>
+                                     {{ comment.content|safe }}
+
+                                     <a class="pull-right">支持&nbsp;</a>
+                                     <a class="pull-right reply_comment">回复&nbsp;</a>
+                                     <span class="{{ comment.nid }}"></span>
+                                 {% else %}
+                                     {{ comment|safe }}
+                                     <a class="pull-right">支持&nbsp;</a>
+                                     <a href="#comment_content" class="pull-right reply_comment">回复&nbsp;</a>
+                                     <span class="{{ comment.nid }}"></span>
+                                 {% endif %}
+
+                             </li>
+
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="row">
+                <p>评论</p>
+                <form id="form1" name="form1" method="post" action="">
+                    {% csrf_token %}
+                    <textarea cols=“300” rows=“100” id="comment_content" class="comment_input">
+                    </textarea>
+                    <p><input type="button" class="btn btn-primary comment_content" value="提交"></p>
+                </form>
+            </div>
+
+
+            <div class="row article_bottom">
+                    我是有底线的
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+
+        editor = KindEditor.create('#comment_content',{});
+        var parent_comment_id = 0;
+        var parent_comment_username='';
+        var article_id = {{ article.nid }};
+
+{#    ###############poll ##########################}
+    $('.article_up').click(function () {
+
+        var csrfmiddlewaretoken = $("[name='csrfmiddlewaretoken']").val();
+        poll_data = { "csrfmiddlewaretoken":csrfmiddlewaretoken,
+                         "article_id":article_id };
+
+        {% if request.user.is_authenticated %}
+            $.ajax({
+            url: "/blog/article_up/",
+            type: "POST",
+            data:poll_data,
+
+            success: function (data) {
+                data = JSON.parse(data);
+                if(data['state']){
+                    $('.up_error').text('不能重复点赞').css('color','red');
+                       setTimeout(function () {
+                        $('.up_error').text('')
+                    },2000)
+                }
+                else {
+                    $('.up_count').text(parseInt($('.up_count').text())+1);
+                }
+            }
+            });
+
+        {% else %}
+            location.href = '/login/';
+        {% endif %}
+    });
+
+{#    ###############################reply comment##############################################################}
+
+    $('.article_list').on("click",".reply_comment",function () {
+        parent_comment_id = $(this).next().attr("class");
+        parent_comment_username = $(this).siblings().eq(0).children().eq(1).text();
+        $(".ke-edit-iframe").contents().find(".ke-content").html("@"+parent_comment_username);
+        editor.appendHtml('<br>').focus();
+{#        editor.focus()#}
+    });
+
+{#    #####################################comment content############################################}
+
+  $('.comment_content').click(function () {
+      var content = editor.text();
+      console.log(content);
+      var index = content.indexOf('\n');
+      var comment_content = content.substr(index+1);
+
+      {% if request.user.is_authenticated %}
+{#        var content = $(this).parent().prev().val();#}
+          var csrfmiddlewaretoken = $("[name='csrfmiddlewaretoken']").val();
+          comment_data = {
+              'csrfmiddlewaretoken': csrfmiddlewaretoken,
+              'content': comment_content,
+              'article_id': article_id,
+              'parent_comment_id':parent_comment_id
+          };
+          $.ajax({
+              url: "/blog/article_comment/",
+              type: "POST",
+              data: comment_data,
+
+              success: function (data) {
+                  setTimeout(function () {
+                      $(".ke-edit-iframe").contents().find(".ke-content").html('');
+{#                       $('.comment_input').val('');#}
+                  },100);
+
+                  $('.comment_count').text(parseInt($('.comment_count').text()) + 1);
+                  $('.comment_content_list').append(data);
+
+                   parent_comment_username="";
+                   parent_comment_id=0
+              }
+          });
+
+      {% else %}
+          location.href = '/login'+ "{{ request.path }}";
+
+      {% endif %}
+
+  })
+
+    </script>
+
+{% endblock %}

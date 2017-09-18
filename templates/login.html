@@ -1,0 +1,59 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎登录</title>
+    <script src="{% static 'jquery-3.2.1.js' %}"></script>
+    <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/mystyle.css' %}" rel="stylesheet">
+
+
+</head>
+<body>
+<div class="container login_container">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <form action="/login/" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                </div>
+                 <div class="form-group">
+                     <label for="valid_code">验证码</label>
+                     <div class="row">
+                         <div class="col-sm-6">
+                             <input type="text" class="form-control" id="valid_code" name="valid_code" placeholder="valid code">
+                         </div>
+                         <div class="col-sm-6">
+                             <img src="/valid_code/" alt="" class="valid_img">
+                             <a class="img_refresh">刷新</a>
+                         </div>
+                     </div>
+                </div>
+                <button type="button" class="btn btn-default login_button">提交</button>
+                <span class="login_error_message"></span>
+
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/myaction.js' %}"></script>
+</body>
+
+
+</html>
