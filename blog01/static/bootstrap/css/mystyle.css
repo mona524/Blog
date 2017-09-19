@@ -170,7 +170,7 @@ margin-left: 50px}
     !important;
 }
 
-anel{margin-top: -50px}
+.panel{margin-top: -50px}
 
 
 .my_panel_heading{
@@ -253,8 +253,9 @@ anel{margin-top: -50px}
 
 
 
+/**************************user add article html ***************************************************************/
 
+.comment_index{margin: 0;!important;}
 
-
-.content{margin-left: 20px}
+.content_index{margin-left: 20px!important;}
 

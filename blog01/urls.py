@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'(?P<username>\w+)/add_article', views.add_article),
     url(r'(?P<username>\w+)/articles/(?P<article_id>\d+)', views.articles),
     url(r'^article_up', views.article_up),
+    url(r'^article_index_comment', views.article_index_comment),
     url(r'^article_comment', views.article_comment),
     url(r'user_manager', views.user_manager),
     url(r'(?P<username>.*)', views.user),

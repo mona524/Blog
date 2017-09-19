@@ -1,11 +1,26 @@
 
 {% extends 'user.html' %}
 
+
+{% block css %}
+
+    <style>
+
+    #comment_box{margin-left: -10px}
+
+    .comment_index{margin: 20px;!important;}
+
+    .user_index{color: red}
+
+
+    .comment_index .comment_index{background-color: lightgrey}
+
+    </style>
+{% endblock %}
+
 {% block  article%}
     <h3>{{ article.title }}</h3>
-
     {{ article_content|safe }}
-
     <div class="row article_comment">
         <hr>
         <div class="row">
@@ -25,10 +40,10 @@
                 </span> <a class="article_up"><span class="glyphicon glyphicon-thumbs-up"></span></a>({{ article.up_count }})
                 <span class="up_error"></span>
                  &nbsp;&nbsp;
-                踩一下<a href=""><span class="glyphicon glyphicon-thumbs-down"></span></a>
+                踩一下<a href=""><span class="glyphicon glyphicon-thumbs-down"></span></a>hh
                         <span class="up_count" >({{ article.down_count }})</span>
                    <div class="col-sm-6 col-sm-offset-6">
-                    posted @ {{ article.create_time|date:'Y-m-d h:m' }} {{ user.username }}
+                    posted @ {{ article.create_time|date:'Y-m-d' }} {{article.create_time|time:'H:i' }} {{ user.username }}
                     阅读数{{ article.read_count }}
                     评论{{ article.comment_count }}
 
@@ -122,12 +137,11 @@
            });
     };
 
-
      function CommentTree(commentList) {
          var htmls='';
          $.each(commentList,function (k,v) {
-             var comment_str = '<div class="comment">';
-             var temp = '<div class="content"><p><span>{0}</span>&nbsp;&nbsp;&nbsp;<span>{1}</span></p> <p><span>{2}</span> <a class="pull-right">支持</a><a class="pull-right reply_comment">回复&nbsp;&nbsp;</a> <span class={3}></span></p></div>'.format(v['user'],v['create_time'],v['content'],v['nid']);
+             var comment_str = '<div class="comment_index">';
+             var temp = '<div class="content_index"> <p>  <a href="/blog/{0}" class="user_index"> {1} </a>&nbsp;&nbsp;&nbsp;<span> {2} </span></p>  <p> <span> {3} </span> <a class="pull-right">支持</a> <a class="pull-right reply_comment">回复&nbsp;&nbsp;</a> <span class={4} ></span></p></div>'.format(v['user'],v['user'],v['create_time'],v['content'],v['nid']);
              comment_str += temp;
              if (v['children_comments']){
                  comment_str += CommentTree(v['children_comments'])
@@ -158,11 +172,8 @@
     });
 
 
-
     $('.comment_content').click(function () {
-      var content = editor.html();
-      var index = content.indexOf('\n');
-      var comment_content = content.substr(index+1);
+      var comment_content = editor.html();
 
       {% if request.user.is_authenticated %}
           var csrfmiddlewaretoken = $("[name='csrfmiddlewaretoken']").val();
@@ -172,23 +183,33 @@
               'article_id': article_id,
               'parent_comment_id':parent_comment_id
           };
+
           $.ajax({
-              url: "/blog/article_comment/",
+              url: "/blog/article_index_comment/",
               type: "POST",
               data: comment_data,
 
               success: function (data) {
+                  data = JSON.parse(data);
                   setTimeout(function () {
                       $(".ke-edit-iframe").contents().find(".ke-content").html('');
-{#                       $('.comment_input').val('');#}
                   },100);
 
                   $('.comment_count').text(parseInt($('.comment_count').text()) + 1);
-                  $('.comment_content_list').append(data);
+
+                   var comment_str = '<div class="comment_index"><div class="content_index" class="user_index"> <p> <a href="/blog/{0}"> {1} </a>&nbsp;&nbsp;&nbsp;<span> {2} </span></p> <p> <span>{3} </span> <a class="pull-right">支持</a> <a class="pull-right reply_comment">回复&nbsp;&nbsp;</a> <span class={4}></span></p></div></div>'.format('{{ request.user }}','{{ request.user }}',data['comment_create_time'],comment_content,data['comment_id']);
+                  if (parent_comment_id){
+
+                      $('.'+parent_comment_id).append(comment_str)
+
+                  }
+
+                  else {$('#comment_box').append(comment_str);}
 
                    parent_comment_username="";
                    parent_comment_id=0
               }
+
           });
 
       {% else %}

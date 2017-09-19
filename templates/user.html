@@ -11,6 +11,8 @@
     <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'bootstrap/css/mystyle.css' %}" rel="stylesheet">
     <script src="{% static 'kindeditor_a5/kindeditor-4.1.10/kindeditor-all.js' %}"></script>
+    {% block css %}
+    {% endblock %}
 
 </head>
 <body>
@@ -49,7 +51,7 @@
             <ul class="nav navbar-nav navbar-right">
 
                 {% if user.is_authenticated %}
-                    <li class="index_welcome">欢迎登录 {{ user }}</li>
+                    <li class="index_welcome">欢迎登录 {{ request.user }}</li>
                     <li><a href="/set_password/">修改密码</a></li>
                     <li><a href="/logout/">退出</a></li>
                 {% else %}
@@ -62,10 +64,6 @@
     </div><!-- /.container-fluid -->
 </nav>
 {#----------------------navbar end here------------------------#}
-
-
-
-
 
 <div class="container">
     <div class="row">
@@ -285,7 +283,6 @@
 
     </div>
 </div>
-
 
 <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'bootstrap/js/myaction.js' %}"></script>

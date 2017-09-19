@@ -153,7 +153,7 @@ def log_out(request):
 
 @login_required
 def set_password(request):
-    pass
+    return render(request,'setpassword.html')
 
 def user(request,username,**kwargs):
 
@@ -208,7 +208,8 @@ def user(request,username,**kwargs):
                                            'data_count_list':data_count_list,
                                            'user_entry_time':user_entry_time,
                                            'fan_count':fan_count,
-                                           'current_user':user_obj
+                                           'request':request
+
                                            })
     else:
         return HttpResponse('404:page not found1111')
@@ -405,11 +406,13 @@ def articles_index(request,username,article_id):
         # print(comment_list)
         comment_dict = collections.OrderedDict()
         for comment in comment_list:
+
             comment['children_comments'] = []
             user_id = comment['user']
             user_name = UserInfo.objects.get(nid=user_id)
             comment['user']=user_name.username
-            comment['create_time'] = comment['create_time'].strftime('%Y-%m-%d %h:%m')
+            comment['create_time'] = comment['create_time'].strftime('%Y-%m-%d %H:%M')
+
             comment_dict[comment['nid']]=comment
 
         ret = []
@@ -473,8 +476,29 @@ def articles_index(request,username,article_id):
         return HttpResponse('404:page not found')
 
 
+@login_required
+def article_index_comment(request):
+    article_id = request.POST.get('article_id')
+    user_id = request.user.nid
+    comment_content = request.POST.get('content')
+    if request.POST.get('parent_comment_id'):
+        parent_comment_id = request.POST.get('parent_comment_id')
+        comment_object = Comment.objects.create(article_id=article_id,user_id=user_id,content=comment_content,parent_id_id=parent_comment_id)
 
+    else:
+        comment_object = Comment.objects.create(article_id=article_id,user_id=user_id,content=comment_content)
 
+    Article.objects.filter(nid=article_id).update(comment_count= F('comment_count')+1)
+    count = Article.objects.filter(nid=article_id).first().comment_count
+
+    comment_id = comment_object.nid
+    comment_create_time = comment_object.create_time.strftime('%Y-%m-%d %H:%M')
+
+    response_data = {}
+    response_data['comment_id'] = comment_id
+    response_data['comment_create_time'] = comment_create_time
+
+    return HttpResponse(json.dumps(response_data))
 
 
 
